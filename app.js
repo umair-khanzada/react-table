@@ -27,10 +27,10 @@ class Table extends React.Component{
                 //nested key.
                 if(obj.nestedKey){
                     //nested key && customize function.
-                    if(obj.customizeData){
+                    if(obj.modification){
                         return (
                             (data.hasOwnProperty([obj.key]) && typeof data[obj.key] === 'object' && !(data[obj.key] instanceof Array)) ?
-                                <td key={i}>{obj.customizeData(data[obj.key][obj.nestedKey], data)}</td> :
+                                <td key={i}>{obj.modification(data[obj.key][obj.nestedKey], data, rowIndex)}</td> :
                                 <td key={i}>Not an object</td>
                         )
                     }
@@ -41,13 +41,14 @@ class Table extends React.Component{
                     )
                 }
                 //customize function.
-                else if(obj.customizeData){
+                else if(obj.modification){
                     return (
-                        <td key={i}>{obj.customizeData(data[obj.key], data)}</td>
+                        <td key={i}>{obj.modification(data[obj.key], data, rowIndex)}</td>
                     )
                 }
+                //default node.
                 return (
-                    <td key={i}>{data[obj.key]}</td>
+                    data.hasOwnProperty([obj.key]) ? <td key={i}>{data[obj.key]}</td> : <td key={i}>Not define</td>
                 )
             })
         };
@@ -85,12 +86,9 @@ class Table extends React.Component{
 
 Table.propTypes = {
     //example: [{config: [{key: '', label: '', isSortable: boolean}], isFixed: boolean, cssClass: string}]
-    /*Note: In tables props each object generate it's own table according to configuration.
-     1)multiple key separate by space,
-     2)cannot pass nestedKey and method at a time,
-     3)cannot pass multiple keys and nestedKey at a time,
-     4)cannot pass empty key with nestedKey or method,
-     5)customizeData have two arguments first key data, second full data
+    /*Note: In tables props each object generate it's own table according to it's configuration.
+     1)key is the name of your object properties,
+     2)modification have three arguments first key value, second full data, third rowIndex.
      for now.*/
 
     //tables is an array of objects.
@@ -100,44 +98,43 @@ Table.propTypes = {
             label: PropTypes.string.isRequired,
             icon: PropTypes.node,
             nestedKey: PropTypes.string,
-            customizeData: PropTypes.func,  //get two arguments in customizeData function, 1st value, 2nd whole object, and don't forgot to return value.
-            //method: PropTypes.string,
-            //colSpan: PropTypes.number,
-            //forColSpan: PropTypes.bool,
-            //isExpire: PropTypes.bool
+            modification: PropTypes.func
         })).isRequired,
-        //isFixed: React.PropTypes.bool.isRequired,
         cssClass: PropTypes.string
     }) ).isRequired,
-    //data array
-    data: PropTypes.arrayOf(React.PropTypes.shape({})).isRequired,
-    //handlers object.
-    //handlers: PropTypes.shape({
-    // sort: PropTypes.func,
-    // edit: PropTypes.func,
-    // delete: PropTypes.func
-    //}).isRequired,
-    //sort by
-    //sort: PropTypes.shape({
-    // sortBy: PropTypes.any,
-    //  sortVal: PropTypes.any
-    //}).isRequired
+    //array of objects.
+    data: PropTypes.arrayOf(React.PropTypes.shape({})).isRequired
 };
 
 //Bootstrap App
 ReactDOM.render(
-    <Table tables={[{
-              config: [
-                {key: 'name', label: 'NAME', icon: <i className="fa fa-user" aria-hidden="true"></i>, customizeData: (name, obj) => `Mr: ${name}`}
-              ]
-            },
-            {
-              config: [
-                {key: 'city', nestedKey: 'code', label: 'CITY CODE'},
-                {key: 'city', nestedKey: 'name', label: 'CITY NAME', customizeData: (name, obj) => `${name}, Pakistan`}
-              ]
-            }]}
-           data={[{name: 'umair', city: {name: 'karachi', code: 7500}}, {name: 'zubair', city: {name: 'karachi', code: 7809}}]}
+    <Table tables={
+                    [
+                        {
+                              config: [
+                                {
+                                    key: 'name',
+                                    label: 'NAME',
+                                     icon: <i className="fa fa-user" aria-hidden="true"></i>,
+                                      modification: (name, obj, index) => `Mr: ${name}`
+                                }
+                              ]
+                        }
+                    ]
+                  }
+           data={
+                    [
+                        {
+                            name: 'Jhon'
+                        },
+                        {
+                            name: 'Sara'
+                        },
+                        {
+                            name: 'Domnic'
+                        }
+                    ]
+                }
 
         />,
     document.getElementById('app')
