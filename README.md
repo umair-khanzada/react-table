@@ -1,4 +1,4 @@
-# reactTable
+# react-table
 A reusable table component for react.js
 
 ___
@@ -49,13 +49,7 @@ ___
                         }
                     ]
                   }
-           data={
-                    [
-                        { name: 'Jhon' },
-                        { name: 'Sara' },
-                        { name: 'Domnic' }
-                    ] 
-                }
+           data={this.data}
 
         />       
 ```
