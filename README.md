@@ -33,23 +33,7 @@ ___
 <br />
 
 #### A simple table example: 
+[Data pattern ](https://jsfiddle.net/xjaz0mvt/)
 ```
-<Table tables={
-                    [
-                        {
-                              config: [
-                                {
-                                    key: 'name',
-                                    label: 'NAME',
-                                     icon: <i className="fa fa-user" aria-hidden="true"></i>,
-                                      modification: (name, obj, index) => `Mr: ${name}`
-                                }
-                              ],
-                              cssClass: 'css-class'
-                        }
-                    ]
-                  }
-           data={this.data}
-
-        />       
+<Table tables={this.tables} data={this.data} />       
 ```
